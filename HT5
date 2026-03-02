@@ -7,10 +7,10 @@ import statistics as st
 
 
 
-RAM_TOTAL = 100
+ram_total = 100
 env = simpy.Environment()
 
-RAM = simpy.Container(env, init = RAM_TOTAL, capacity = RAM_TOTAL)
+RAM = simpy.Container(env, init = ram_total, capacity = ram_total)
 CPU = simpy.Resource(env, capacity = 1)
 
 def proceso(env, pid, RAM, CPU, cpu_speed, resultados):
@@ -55,17 +55,16 @@ def correr_simulacion(n_procesos, interval, ram_total=100, cpu_speed=3, cpus=1, 
     env.run()
     return resultados
 
-tiempos = correr_simulacion(25, interval=1)
+tiempos = correr_simulacion(25, interval=10)
 print("promedios", st.mean(tiempos))
 print("desviación estándar", st.stdev(tiempos))
-
 datos = []
-for n in {25, 50, 100, 150, 200}:
-    tiempos = correr_simulacion(n, interval=1)
+for n in {200}:
+    tiempos = correr_simulacion(n, interval=10)
     datos.append({"n":n, "promedio":st.mean(tiempos), "desviación":st.stdev(tiempos)})
 
 df = pd.DataFrame(datos)
 print(df)
 
-df.plot(x="n", y="promedio", kind="line", title="Promedio de tiempo de espera vs número de procesos")
+df.plot(x="n", y="promedio", kind="line", marker="o", title="Promedio de tiempo de espera vs número de procesos")
 plt.show()
